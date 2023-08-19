@@ -2,13 +2,21 @@
 
 import React, { useEffect, useState } from "react";
 
-import axios from "axios";
 import NewsCard from "../NewsCard";
 
+import { useDispatch } from "react-redux";
+
+import { tabsHandler } from "@/store/slice/tabsSlice";
+
+// import { MagnifyingGlass } from "react-loader-spinner";
+// import { Audio } from "react-loader-spinner";
+
+import { useGetTopHeadlinesQuery } from "@/store/api/restApis";
+
 const HomePage = () => {
-  const [news, setNewsData] = useState([]);
   const [tab, setTab] = useState("general");
-  const API_KEY = "18a2432b5d484a44ac02ef549813b3dd";
+
+  const dispatch = useDispatch();
 
   const tabs = [
     "business",
@@ -20,39 +28,29 @@ const HomePage = () => {
     "technology",
   ];
 
-  const getData = async () => {
-    try {
-      const res = await axios.get(
-        `https://newsapi.org/v2/top-headlines?country=us&category=${tab}&pageSize=30`,
-        {
-          headers: {
-            Authorization: `Bearer ${API_KEY}`,
-          },
-        }
-      );
-      if (res.status) {
-        console.log(res);
-        setNewsData(res.data.articles);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const { data, error, isLoading } = useGetTopHeadlinesQuery({ tab });
+  // console.log(data.articles);
+  const news = data?.articles;
 
-  useEffect(() => {
-    getData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab]);
-  console.log("news", news);
+  const handleDropdownChange = (event) => {
+    setTab(event.target.value);
+    dispatch(tabsHandler(event.target.value));
+  };
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen">
+    <div className="flex flex-col justify-center items-center space-y-7 min-h-screen w-full  p-5">
       <h1 className="text-4xl font-extrabold mb-3 ">News</h1>
-      <div className="space-x-3 flex-wrap">
+      <div className="space-x-3  hidden   sm:flex justify-around items-center  flex-wrap">
         {tabs.map((val, idx) => (
           <button
-            onClick={() => setTab(val)}
-            className={`bg-stone-500 p-2 hover:shadow-2xl ${
+            onClick={() => {
+              setTab(val);
+              dispatch(tabsHandler(val));
+            }}
+            className={`bg-stone-500 my-3 p-2 hover:shadow-2xl ${
               tab === val ? "bg-red-500 shadow-red-500" : ""
             } `}
             key={idx}
@@ -61,10 +59,27 @@ const HomePage = () => {
           </button>
         ))}
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-5 w-full mx-auto md:gap-5 my-7">
-        {news.map((val, idx) => (
-          <NewsCard key={idx} {...val} />
+      <select
+        className="border sm:hidden rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        value={tab}
+        onChange={handleDropdownChange}
+      >
+        {tabs.map((e, idx) => (
+          <option key={idx} value={e}>
+            {e}
+          </option>
         ))}
+      </select>
+      <div className="flex justify-center items-center w-full  ">
+        {isLoading ? (
+          <h1>loading ...</h1>
+        ) : (
+          <div className="grid grid-cols-1 gap-y-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  w-full  md:gap-5 my-7">
+            {news.map((val, idx) => (
+              <NewsCard key={idx} id={idx} {...val} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
