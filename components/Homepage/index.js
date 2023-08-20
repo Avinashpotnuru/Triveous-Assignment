@@ -9,11 +9,12 @@ import { useDispatch } from "react-redux";
 import { tabsHandler } from "@/store/slice/tabsSlice";
 
 // import { MagnifyingGlass } from "react-loader-spinner";
-// import { Audio } from "react-loader-spinner";
+import { Audio, ProgressBar } from "react-loader-spinner";
 
 import { useGetTopHeadlinesQuery } from "@/store/api/restApis";
 
 const HomePage = () => {
+  const [currentItems, setCurrentItems] = useState([]);
   const [tab, setTab] = useState("general");
 
   const dispatch = useDispatch();
@@ -36,9 +37,10 @@ const HomePage = () => {
     setTab(event.target.value);
     dispatch(tabsHandler(event.target.value));
   };
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+
+  // if (error) {
+  //   return <div>Error: {error.message}</div>;
+  // }
 
   return (
     <div className="flex flex-col justify-center items-center space-y-7 min-h-screen w-full  p-5">
@@ -72,10 +74,18 @@ const HomePage = () => {
       </select>
       <div className="flex justify-center items-center w-full  ">
         {isLoading ? (
-          <h1>loading ...</h1>
+          <ProgressBar
+            height="80"
+            width="80"
+            ariaLabel="progress-bar-loading"
+            wrapperStyle={{}}
+            wrapperClass="progress-bar-wrapper"
+            borderColor="#F4442E"
+            barColor="#51E5FF"
+          />
         ) : (
           <div className="grid grid-cols-1 gap-y-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  w-full  md:gap-5 my-7">
-            {news.map((val, idx) => (
+            {news?.map((val, idx) => (
               <NewsCard key={idx} id={idx} {...val} />
             ))}
           </div>

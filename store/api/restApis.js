@@ -19,11 +19,18 @@ const restApi = createApi({
         `top-headlines?country=us&category=${data.tab}&pageSize=30`,
     }),
     getArticlesNews: builder.query({
-      query: (data) => `everything?q=${data.searchInput}`,
+      query: (data) => `everything?q=${data.searchResult}`,
+    }),
+    getHeadlines: builder.query({
+      query: (data) => `top-headlines?country=in`,
     }),
   }),
 });
 
-export const { useGetTopHeadlinesQuery, useGetArticlesNewsQuery } = restApi;
+export const {
+  useGetTopHeadlinesQuery,
+  useGetArticlesNewsQuery,
+  useGetHeadlinesQuery,
+} = restApi;
 
 export default restApi;
