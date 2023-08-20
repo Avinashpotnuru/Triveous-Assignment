@@ -18,7 +18,7 @@ const Blog = () => {
   const { data, error, isLoading } = useGetTopHeadlinesQuery({ tab });
   // console.log(data.articles);
   const news = data?.articles[params.id];
-  console.log(news);
+  // console.log(news);
 
   return (
     <div className="h-screen flex flex-col justify-center items-center mt-20 sm:mt-24 p-5 ">

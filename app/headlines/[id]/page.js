@@ -16,7 +16,7 @@ const Blog = () => {
 
   // console.log(data.articles);
   const { data, isLoading } = useGetHeadlinesQuery();
-  console.log(data?.articles);
+  // console.log(data?.articles);
   const news = data?.articles[params.id];
 
   return (

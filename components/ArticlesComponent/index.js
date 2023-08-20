@@ -19,7 +19,7 @@ const ArticlesComponent = () => {
     setSearchResult(searchInput);
   };
   const { data, error, isLoading } = useGetArticlesNewsQuery({ searchResult });
-  console.log(data);
+  // console.log(data);
   const news = data?.articles;
 
   return (
