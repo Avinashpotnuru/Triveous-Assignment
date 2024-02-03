@@ -6,7 +6,7 @@ const API_KEY = "18a2432b5d484a44ac02ef549813b3dd";
 const restApi = createApi({
   reducerPath: "restApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: baseUrl,
+    baseUrl: "https://newsapi.org/v2/",
     prepareHeaders: (headers) => {
       headers.set("authorization", `Bearer ${API_KEY}`);
 
